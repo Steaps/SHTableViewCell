@@ -12,9 +12,8 @@
 @interface SHTableViewCell : UITableViewCell {
 	SHCellContentView * cellContentView;
 	
-	CGFloat sliderOverlay;
-	CGFloat editingPadding;
 	CGFloat edgePadding;
+	CGFloat editingPadding;
 	CGRect frontViewRect;
 	CGRect backViewRect;
 	BOOL animating;
@@ -24,7 +23,6 @@
 - (void)setCellTitle:(NSString *)string;
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat;
 - (void)setEditngPadding:(CGFloat)editingPaddingFloat;
-- (void)setSliderOverlay:(CGFloat)sliderOverlayFloat;
 
 - (void)scrollToPosition:(CGPoint)_position animated:(BOOL)_animated;
 - (void)animationDidStop:(id)sender;

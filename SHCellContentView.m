@@ -44,7 +44,7 @@
 	[[UIImage imageNamed:@"mesh_pattern.png"] drawAsPatternInRect:backViewRect];
 	
 	/* Draw Front View (frontViewRect) */
-	CGContextSetGrayFillColor(c, 1.0, 1.0);
+	CGContextSetGrayFillColor(c, 1.0f, 1.0f);
 	CGContextFillRect(c, frontViewRect);
 	
 	/* Draw Text */

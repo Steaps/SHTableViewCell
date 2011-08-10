@@ -14,8 +14,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
 		edgePadding = 10;
-        editingPadding = 45;
-		sliderOverlay = 20;
+        editingPadding = 35;
 		animating = FALSE;
 		swiped = FALSE;
 		
@@ -26,15 +25,6 @@
 		frontViewRect = CGRectMake(0, 0, (cellContentView.frame.size.width / 2), cellContentView.frame.size.height);
 		backViewRect = CGRectMake((cellContentView.frame.size.width / 2), 0, (cellContentView.frame.size.width / 2), cellContentView.frame.size.height);
 		[cellContentView setFrontView:frontViewRect backViewRect:backViewRect];
-		
-//		NSLog(@"Frontview x origin: %f", frontViewRect.origin.x);
-//		NSLog(@"Frontview y origin: %f", frontViewRect.origin.y);
-//		NSLog(@"Frontview width: %f", frontViewRect.size.width);
-//		NSLog(@"Frontview height: %f", frontViewRect.size.height);
-//		NSLog(@"Backview x origin: %f", backViewRect.origin.x);
-//		NSLog(@"Backview y origin: %f", backViewRect.origin.y);
-//		NSLog(@"Backview width: %f", backViewRect.size.width);
-//		NSLog(@"Backview height: %f", backViewRect.size.height);
 		
 		UISwipeGestureRecognizer * swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeDetected:)];
 		swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
@@ -48,26 +38,31 @@
     [super setSelected:selected animated:animated];
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+	[super setEditing:editing animated:animated];
+	if(self.editing && !swiped)
+		// move content to editing padding
+		[self scrollToPosition:CGPointMake(cellContentView.frame.origin.x - editingPadding, cellContentView.frame.origin.y) animated:YES];
+	else if(self.editing && swiped) {
+		// return the swipe and move the content to editing padding
+		[self scrollToPosition:CGPointMake(self.frame.origin.x - editingPadding, self.frame.origin.y) animated:YES];
+		swiped = FALSE;
+	}
+	else
+		// return the content from editing
+		[self scrollToPosition:CGPointMake(self.frame.origin.x, self.frame.origin.y) animated:YES];
+}
+
 - (void)setCellTitle:(NSString *)string {
-	//cellTitle = [string copy];
 	[cellContentView setCellTitle:[string copy]];
 }
 
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat {
-	//edgePadding = edgePaddingFloat;
 	[cellContentView setEdgePadding:edgePaddingFloat];
 }
 
 - (void)setEditngPadding:(CGFloat)editingPaddingFloat {
 	editingPadding = editingPaddingFloat;
-}
-
-- (void)setSliderOverlay:(CGFloat)sliderOverlayFloat {
-	sliderOverlay = sliderOverlayFloat;
-}
-
-- (void)drawRect:(CGRect)rect {
-	[super drawRect:rect];
 }
 
 - (void)leftSwipeDetected:(UIGestureRecognizer *)sender {
@@ -77,27 +72,43 @@
 			[self scrollToPosition:backViewRect.origin animated:YES];
 			swiped = TRUE;
 		} else if(swiped) {
-			
+			[self scrollToPosition:frontViewRect.origin animated:YES];
+			swiped = FALSE;
 		}
 	}
 }
 
 - (void)scrollToPosition:(CGPoint)_position animated:(BOOL)_animated {
 	if(_animated) {
-		animating = TRUE;
 		[UIView beginAnimations:nil context:nil];
 		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
 		[UIView setAnimationDuration:0.2];
+		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(animationDidStop:)];
 	}
 	
-	cellContentView.frame = CGRectMake(-_position.x, cellContentView.frame.origin.y, cellContentView.frame.size.width, cellContentView.frame.size.height);
-	
-	[UIView commitAnimations];
+	if(swiped)
+		cellContentView.frame = CGRectMake(-_position.x, cellContentView.frame.origin.y, cellContentView.frame.size.width, cellContentView.frame.size.height);
+	else 
+		cellContentView.frame = CGRectMake(-_position.x, cellContentView.frame.origin.y, cellContentView.frame.size.width, cellContentView.frame.size.height);
+		
+	if(_animated)
+		animating = TRUE;
+		[UIView commitAnimations];
 }
 
 - (void)animationDidStop:(id)sender {
 	animating = FALSE;
+}
+
+- (void)drawRect:(CGRect)rect {
+	[super drawRect:rect];
+	
+	CGContextRef c = UIGraphicsGetCurrentContext();
+	
+	/* Could just use self.backgroundColour, but if there's more custom drawing for the background it needs done in drawRect: */
+	CGContextSetGrayFillColor(c, 1.0, 1.0);
+	CGContextFillRect(c, frontViewRect);
 }
 
 - (void)dealloc {
