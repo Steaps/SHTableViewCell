@@ -1,6 +1,5 @@
 //
-//  SHCell.m
-//  TableViewTests
+//  SHTableViewCell.m
 //
 //  Created by Stephen Heaps on 11-08-10.
 //  Copyright 2011 Steaps. All rights reserved.
@@ -28,6 +27,10 @@
 		
 		UISwipeGestureRecognizer * swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeDetected:)];
 		swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+		[self addGestureRecognizer:swipeRecognizer];
+		[swipeRecognizer release];
+		swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeDetected:)];
+		swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 		[self addGestureRecognizer:swipeRecognizer];
 		[swipeRecognizer release];
     }
@@ -65,6 +68,15 @@
 	editingPadding = editingPaddingFloat;
 }
 
+- (void)rightSwipeDetected:(UIGestureRecognizer *)sender {
+	if(!animating) {
+		if(swiped) {
+			animating = TRUE;
+			[self scrollToPosition:frontViewRect.origin animated:YES];
+		}
+	}
+}
+
 - (void)leftSwipeDetected:(UIGestureRecognizer *)sender {
 	if(!animating) {
 		animating = TRUE;
@@ -91,10 +103,10 @@
 		cellContentView.frame = CGRectMake(-_position.x, cellContentView.frame.origin.y, cellContentView.frame.size.width, cellContentView.frame.size.height);
 	else 
 		cellContentView.frame = CGRectMake(-_position.x, cellContentView.frame.origin.y, cellContentView.frame.size.width, cellContentView.frame.size.height);
-		
+	
 	if(_animated)
 		animating = TRUE;
-		[UIView commitAnimations];
+	[UIView commitAnimations];
 }
 
 - (void)animationDidStop:(id)sender {

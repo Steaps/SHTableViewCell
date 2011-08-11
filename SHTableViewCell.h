@@ -1,6 +1,5 @@
 //
-//  SHCell.h
-//  TableViewTests
+//  SHTableViewCell.h
 //
 //  Created by Stephen Heaps on 11-08-10.
 //  Copyright 2011 Steaps. All rights reserved.
