@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SHBadgeView.h"
 
 @interface SHCellContentView : UIView {
 	CGRect frontViewRect;
@@ -18,5 +19,7 @@
 - (void)setCellTitle:(NSString *)string;
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat;
 - (void)setFrontView:(CGRect)_frontViewRect backViewRect:(CGRect)_backViewRect;
+
+- (void)addBadge;
 
 @end

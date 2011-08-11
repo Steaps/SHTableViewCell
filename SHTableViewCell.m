@@ -7,13 +7,17 @@
 
 #import "SHTableViewCell.h"
 
+#define kEdgePadding 10
+#define kEditingPadding 35
+#define kDefaultAnimationSpeed 0.2
+
 @implementation SHTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-		edgePadding = 10;
-        editingPadding = 35;
+		edgePadding = kEdgePadding;
+        editingPadding = kEditingPadding;
 		animating = FALSE;
 		swiped = FALSE;
 		
@@ -33,6 +37,8 @@
 		swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
 		[self addGestureRecognizer:swipeRecognizer];
 		[swipeRecognizer release];
+		
+		[cellContentView addBadge];
     }
     return self;
 }
@@ -93,8 +99,8 @@
 - (void)scrollToPosition:(CGPoint)_position animated:(BOOL)_animated {
 	if(_animated) {
 		[UIView beginAnimations:nil context:nil];
-		[UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-		[UIView setAnimationDuration:0.2];
+		[UIView setAnimationCurve:UIViewAnimationCurveLinear];
+		[UIView setAnimationDuration:kDefaultAnimationSpeed];
 		[UIView setAnimationDelegate:self];
 		[UIView setAnimationDidStopSelector:@selector(animationDidStop:)];
 	}

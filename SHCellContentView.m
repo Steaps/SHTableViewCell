@@ -7,6 +7,9 @@
 
 #import "SHCellContentView.h"
 
+#define badgePosX 255
+#define badgePosY 13
+
 @implementation SHCellContentView
 
 @synthesize cellTitle;
@@ -17,6 +20,13 @@
         self.backgroundColor = [UIColor blackColor];
     }
     return self;
+}
+
+- (void)addBadge {
+	int x = arc4random() % 100;
+	SHBadgeView * badgeView = [[SHBadgeView alloc] initWithFrame:CGRectMake(badgePosX, badgePosY, 10, 18)];
+	[badgeView setBadgeString:[NSString stringWithFormat:@"%i", x]];
+	[self addSubview:badgeView];
 }
 
 - (void)setCellTitle:(NSString *)string {

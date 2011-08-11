@@ -1,10 +1,12 @@
 ## NOTE
-Currently a work in progress, nothing is expected to work.
+Currently a work in progress, nothing should be expected to work.
 
 ## Updates
 Updated to a new method of revealing the back view.
 
 Editing now works.
+
+Badges now work, with example.
 
 ## TODO
 [DONE] Fix editing mode
@@ -23,4 +25,4 @@ Editing now works.
 
 * Implement copying of the cell
 
-* Implement 'badge' for each cell
+[DONE] Implement 'badge' for each cell
