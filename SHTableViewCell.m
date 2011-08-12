@@ -19,28 +19,46 @@
 		edgePadding = kEdgePadding;
         editingPadding = kEditingPadding;
 		animating = FALSE;
-		swiped = FALSE;
 		
-		cellContentView = [[SHCellContentView alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width * 2, self.frame.size.height)];
-		[cellContentView setEdgePadding:edgePadding];
-		[self addSubview:cellContentView];
+		NSLog(@"SLIDERCELL: %i", sliderCell);
 		
-		frontViewRect = CGRectMake(0, 0, (cellContentView.frame.size.width / 2), cellContentView.frame.size.height);
-		backViewRect = CGRectMake((cellContentView.frame.size.width / 2), 0, (cellContentView.frame.size.width / 2), cellContentView.frame.size.height);
-		[cellContentView setFrontView:frontViewRect backViewRect:backViewRect];
-		
-		UISwipeGestureRecognizer * swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeDetected:)];
-		swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
-		[self addGestureRecognizer:swipeRecognizer];
-		[swipeRecognizer release];
-		swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeDetected:)];
-		swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-		[self addGestureRecognizer:swipeRecognizer];
-		[swipeRecognizer release];
-		
-		[cellContentView addBadge];
-    }
-    return self;
+		if(sliderCell) {
+			swiped = FALSE;
+			
+			cellContentView = [[SHCellContentView alloc] initWithFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y, self.frame.size.width * 2, self.frame.size.height)];
+			[cellContentView setEdgePadding:edgePadding];
+			[self addSubview:cellContentView];
+			
+			frontViewRect = CGRectMake(0, 0, (cellContentView.frame.size.width / 2), cellContentView.frame.size.height);
+			backViewRect = CGRectMake((cellContentView.frame.size.width / 2), 0, (cellContentView.frame.size.width / 2), cellContentView.frame.size.height);
+			[cellContentView setFrontView:frontViewRect backViewRect:backViewRect];
+			
+			UISwipeGestureRecognizer * swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(leftSwipeDetected:)];
+			swipeRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+			[self addGestureRecognizer:swipeRecognizer];
+			[swipeRecognizer release];
+			swipeRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(rightSwipeDetected:)];
+			swipeRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
+			[self addGestureRecognizer:swipeRecognizer];
+			[swipeRecognizer release];
+			
+			[cellContentView addBadge];
+		} else {
+			cellContentView = [[SHCellContentView alloc] initWithFrame:self.frame];
+			[cellContentView setEdgePadding:edgePadding];
+			[self addSubview:cellContentView];
+			
+			frontViewRect = cellContentView.frame;
+			[cellContentView setFrontView:frontViewRect backViewRect:backViewRect];
+		}
+	}
+	return self;
+}
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier sliderCell:(BOOL)_sliderCell {
+	sliderCell = _sliderCell;
+	self = [self initWithStyle:style reuseIdentifier:reuseIdentifier];
+	return self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -75,7 +93,7 @@
 }
 
 - (void)rightSwipeDetected:(UIGestureRecognizer *)sender {
-	if(!animating) {
+	if(!animating && sliderCell) {
 		if(swiped) {
 			animating = TRUE;
 			[self scrollToPosition:frontViewRect.origin animated:YES];
@@ -84,7 +102,7 @@
 }
 
 - (void)leftSwipeDetected:(UIGestureRecognizer *)sender {
-	if(!animating) {
+	if(!animating && sliderCell) {
 		animating = TRUE;
 		if(!swiped) {
 			[self scrollToPosition:backViewRect.origin animated:YES];

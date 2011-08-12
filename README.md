@@ -2,11 +2,13 @@
 Currently a work in progress, nothing should be expected to work.
 
 ## Updates
-Updated to a new method of revealing the back view.
+* Updated to a new method of revealing the back view.
 
-Editing now works.
+* Editing now works.
 
-Badges now work, with example.
+* Badges now work.
+
+* Ability to create a cell without slider feature implemented.
 
 ## TODO
 [DONE] Fix editing mode
@@ -19,9 +21,7 @@ Badges now work, with example.
 
 * Implement selection for the cell
 
-* Implement ability to turn off slider feature through:
-
-	- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier sliderCell:(BOOL)isSlider;
+[DONE] Implement ability to turn off slider feature
 
 * Implement copying of the cell
 

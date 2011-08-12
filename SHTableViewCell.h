@@ -10,6 +10,7 @@
 
 @interface SHTableViewCell : UITableViewCell {
 	SHCellContentView * cellContentView;
+	BOOL sliderCell;
 	
 	CGFloat edgePadding;
 	CGFloat editingPadding;
@@ -18,6 +19,8 @@
 	BOOL animating;
 	BOOL swiped;
 }
+
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier sliderCell:(BOOL)_sliderCell;
 
 - (void)setCellTitle:(NSString *)string;
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat;

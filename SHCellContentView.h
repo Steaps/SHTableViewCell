@@ -12,6 +12,8 @@
 	CGRect frontViewRect;
 	CGRect backViewRect;
 	CGFloat edgePadding;
+	
+	BOOL sliderCell;
 }
 
 @property(nonatomic, retain) NSString * cellTitle;
@@ -19,6 +21,7 @@
 - (void)setCellTitle:(NSString *)string;
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat;
 - (void)setFrontView:(CGRect)_frontViewRect backViewRect:(CGRect)_backViewRect;
+- (void)setSliderCell:(BOOL)_sliderCell;
 
 - (void)addBadge;
 

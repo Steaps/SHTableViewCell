@@ -7,8 +7,8 @@
 
 #import "SHCellContentView.h"
 
-#define badgePosX 255
-#define badgePosY 13
+#define kBadgePosFromCellWidthX 20
+#define kBadgePosY 13
 
 @implementation SHCellContentView
 
@@ -17,15 +17,17 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor blackColor];
+        self.backgroundColor = [UIColor whiteColor];
+		sliderCell = TRUE;
     }
     return self;
 }
 
 - (void)addBadge {
 	int x = arc4random() % 100;
-	SHBadgeView * badgeView = [[SHBadgeView alloc] initWithFrame:CGRectMake(badgePosX, badgePosY, 10, 18)];
+	SHBadgeView * badgeView = [[SHBadgeView alloc] initWithFrame:CGRectMake(kBadgePosFromCellWidthX, kBadgePosY, 10, 18)];
 	[badgeView setBadgeString:[NSString stringWithFormat:@"%i", x]];
+	badgeView.frame = CGRectMake((self.frame.size.width / 2) - kBadgePosFromCellWidthX - badgeView.frame.size.width, kBadgePosY, badgeView.frame.size.width, badgeView.frame.size.height);
 	[self addSubview:badgeView];
 }
 
@@ -36,6 +38,10 @@
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat {
 	edgePadding = edgePaddingFloat;
 	[self setNeedsDisplay];
+}
+
+- (void)setSliderCell:(BOOL)_sliderCell {
+	sliderCell = _sliderCell;
 }
 
 - (void)setFrontView:(CGRect)_frontViewRect backViewRect:(CGRect)_backViewRect {
@@ -49,8 +55,10 @@
 	
 	CGContextRef c = UIGraphicsGetCurrentContext();
 	
-	/* Draw Background View (backViewRect)  */
-	[[UIImage imageNamed:@"mesh_pattern.png"] drawAsPatternInRect:backViewRect];
+	if(sliderCell) {
+		/* Draw Background View (backViewRect)  */
+		[[UIImage imageNamed:@"mesh_pattern.png"] drawAsPatternInRect:backViewRect];
+	}
 	
 	/* Draw Front View (frontViewRect) */
 	CGContextSetGrayFillColor(c, 1.0f, 1.0f);
@@ -63,7 +71,9 @@
 	CGSize cellTitleSize = [cellTitle sizeWithFont:cellFont constrainedToSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
 	
 	[[UIColor blackColor] set];
-	[cellTitle drawInRect:CGRectMake(frontViewRect.origin.x + edgePadding, frontViewRect.origin.y + (cellHeight / 2) - (cellTitleSize.height / 2), cellWidth - 20, cellHeight - 5) withFont:cellFont lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentLeft];	
+	if(sliderCell) {
+		[cellTitle drawInRect:CGRectMake(frontViewRect.origin.x + edgePadding, frontViewRect.origin.y + (cellHeight / 2) - (cellTitleSize.height / 2), cellWidth - 20, cellHeight - 5) withFont:cellFont lineBreakMode:UILineBreakModeTailTruncation alignment:UITextAlignmentLeft];	
+	}
 	
 }
 

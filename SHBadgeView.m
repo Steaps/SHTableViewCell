@@ -7,11 +7,11 @@
 
 #import "SHBadgeView.h"
 
+#define kPadding 10
+
 @implementation SHBadgeView
 
 @synthesize badgeString;
-
-static int kPadding = 10;
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
