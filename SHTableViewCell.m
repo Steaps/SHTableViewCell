@@ -13,6 +13,8 @@
 
 @implementation SHTableViewCell
 
+@synthesize cellCopyString;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
@@ -20,7 +22,12 @@
         editingPadding = kEditingPadding;
 		animating = FALSE;
 		
-		NSLog(@"SLIDERCELL: %i", sliderCell);
+		copyable = FALSE;
+		cellCopyString = nil;
+		
+		UILongPressGestureRecognizer * longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showCopyMenu)];
+		[self addGestureRecognizer:longPressRecognizer];
+		[longPressRecognizer release];
 		
 		if(sliderCell) {
 			swiped = FALSE;
@@ -59,6 +66,21 @@
 	sliderCell = _sliderCell;
 	self = [self initWithStyle:style reuseIdentifier:reuseIdentifier];
 	return self;
+}
+
+static BOOL _fingerDown = FALSE;
+
+- (void)showCopyMenu {
+	NSLog(@"COPY");
+	_fingerDown = !_fingerDown;
+	
+	if(_fingerDown) {
+		NSLog(@"SHOW MENU: _fingerDown = TRUE");
+		UIMenuController * menu = [UIMenuController sharedMenuController];
+		[menu setTargetRect:self.bounds inView:self];
+		[menu setMenuVisible:TRUE];
+		
+	}
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -146,6 +168,57 @@
 	CGContextSetGrayFillColor(c, 1.0, 1.0);
 	CGContextFillRect(c, frontViewRect);
 }
+
+#pragma mark ---
+#pragma mark Copy Methods
+
+- (void)setCopyable:(BOOL)_copyable {
+	copyable = _copyable;
+	
+	UILongPressGestureRecognizer * longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(copyPressRecognizedWithRecognizer:)];
+	[self addGestureRecognizer:longPressRecognizer];
+	[longPressRecognizer release];
+}
+
+- (void)copyPressRecognizedWithRecognizer:(UILongPressGestureRecognizer *)_longPressRecognizer {
+	if([_longPressRecognizer state] == UIGestureRecognizerStateBegan && [self canBecomeFirstResponder]) {
+		[self becomeFirstResponder];
+		
+		UIMenuController * menu = [UIMenuController sharedMenuController];
+		[menu setTargetRect:CGRectMake(self.bounds.origin.x, self.bounds.origin.y - 10, self.bounds.size.width, self.bounds.size.height) inView:self];
+		[menu setMenuVisible:TRUE animated:TRUE];
+	}
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    if ([self isFirstResponder]) {
+        UIMenuController * menu = [UIMenuController sharedMenuController];
+		[menu setMenuVisible:FALSE animated:TRUE];
+		[menu update];
+		
+		[self resignFirstResponder];
+	}
+}
+
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if (action == @selector(copy:)) {
+        return YES;
+    }
+    return [super canPerformAction:action withSender:sender];
+}
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+- (void)copy:(id)sender {
+	NSLog(@"COPY");
+	if(cellCopyString != nil) {
+		NSLog(@"cell content string not nil");
+		[[UIPasteboard generalPasteboard] setString:cellCopyString];
+	}
+}	
+	
 
 - (void)dealloc {
     [super dealloc];

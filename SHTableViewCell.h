@@ -12,6 +12,8 @@
 	SHCellContentView * cellContentView;
 	BOOL sliderCell;
 	
+	BOOL copyable;
+	
 	CGFloat edgePadding;
 	CGFloat editingPadding;
 	CGRect frontViewRect;
@@ -20,11 +22,14 @@
 	BOOL swiped;
 }
 
+@property (nonatomic, retain) NSString * cellCopyString;
+
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier sliderCell:(BOOL)_sliderCell;
 
 - (void)setCellTitle:(NSString *)string;
 - (void)setEdgePadding:(CGFloat)edgePaddingFloat;
 - (void)setEditngPadding:(CGFloat)editingPaddingFloat;
+- (void)setCopyable:(BOOL)_copyable;
 
 - (void)scrollToPosition:(CGPoint)_position animated:(BOOL)_animated;
 - (void)animationDidStop:(id)sender;

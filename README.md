@@ -10,6 +10,8 @@ Currently a work in progress, nothing should be expected to work.
 
 * Ability to create a cell without slider feature implemented.
 
+* Ability to have a copyString (copyable text) in a cell
+
 ## TODO
 [DONE] Fix editing mode
 
@@ -23,6 +25,6 @@ Currently a work in progress, nothing should be expected to work.
 
 [DONE] Implement ability to turn off slider feature
 
-* Implement copying of the cell
+[DONE] Implement copying of the cell
 
 [DONE] Implement 'badge' for each cell
